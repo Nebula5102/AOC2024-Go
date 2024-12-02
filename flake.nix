@@ -18,8 +18,7 @@
 		];
 
 	    shellHook = ''
-	    	echo "Entered Node Dev environment"
-		kitty
+	    	echo "Entered Go Dev environment"
 		'';
 	};
   };
