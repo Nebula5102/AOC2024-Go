@@ -13,9 +13,11 @@ import (
 
 func Multiply(expression []byte) int {
 	re := regexp.MustCompile(`[0-9]+,[0-9]+`)
+
 	nums := re.FindAll(expression,-1)
 	str := nums[0]	
 	vals := strings.Split(string(str),",")
+
 	i,err := strconv.Atoi(vals[0])
 	if err != nil {
 		log.Fatal("Error:",err)
@@ -24,6 +26,7 @@ func Multiply(expression []byte) int {
 	if err != nil {
 		log.Fatal("Error:",err)
 	}
+
 	return i*j
 }
 
@@ -36,32 +39,31 @@ func InRange(dos [][]int, lowerBound []int, upperBound []int) int {
 	return -1 
 }
 
-func main() {
-	fp, err := os.Open("input2.txt")
-	if err != nil {
-		log.Fatal("Error:",err)	
-	}
-	all, err := io.ReadAll(fp)
-	if err != nil && err != io.EOF {
-		log.Fatal("Error:",err)	
-	}
-	re := regexp.MustCompile(`mul(\()[0-9]+,[0-9]+(\))`)
+func PartOne(all []byte, re *regexp.Regexp) {
+
 	expressions := re.FindAll(all,-1)
+
 	var sum int
 	for _,expression := range expressions {
 		sum += Multiply(expression)
 	}
 	fmt.Printf("%d\n",sum)
+
+}
+
+func PartTwo(all []byte, re *regexp.Regexp) {
 	do := regexp.MustCompile(`do(\()(\))`)
 	dos := do.FindAllIndex(all,-1)
 	dont := regexp.MustCompile(`don't(\()(\))`)
 	donts := dont.FindAllIndex(all,-1)
+
 	sort.Slice(donts, func(i, j int) bool {
 		return donts[i][0] < donts[j][0]
 	})
 	sort.Slice(dos, func(i, j int) bool {
 		return donts[i][0] < donts[j][0]
 	})
+
 	var doFrom [][]int
 	for i, dont := range donts {
 		if i < len(donts)-1 {
@@ -72,6 +74,7 @@ func main() {
 			}
 		}
 	}
+
 	var	newAll []byte
 	for i, do := range doFrom {
 		if i == 0 {
@@ -81,10 +84,27 @@ func main() {
 			newAll = append(newAll, all[do[1]:do[2]]...)
 		}
 	}
-	expressions = re.FindAll(newAll,-1)
-	sum = 0
+
+	expressions := re.FindAll(newAll,-1)
+	var sum int
 	for _,expression := range expressions {
 		sum += Multiply(expression)
 	}
 	fmt.Printf("%d\n",sum)
+}
+
+func main() {
+	fp, err := os.Open("input2.txt")
+	if err != nil {
+		log.Fatal("Error:",err)	
+	}
+	all, err := io.ReadAll(fp)
+	if err != nil && err != io.EOF {
+		log.Fatal("Error:",err)	
+	}
+	fp.Close()
+
+	re := regexp.MustCompile(`mul(\()[0-9]+,[0-9]+(\))`)
+	PartOne(all,re) 
+	PartTwo(all,re)
 }
