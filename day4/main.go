@@ -6,7 +6,7 @@ import (
 	"log"
 	"io"
 	"fmt"
-	"github.com/Nebula5102/AOC2024-Go/day4/isDirection"
+	"github.com/Nebula5102/AOC2024-Go/day4/internals/word"
 )
 
 func CollateWordsearch(file *os.File, wordSearch *[][]byte) {
@@ -33,11 +33,21 @@ func FindXs(wordSearch *[][]byte, xs *[][]int) {
 	}
 }
 
-func FindMs(wordSearch *[][]byte, xs *[][]int, ms *[][]int) {
-	for _, coords := range *xs {
-		i,j := isDirection.checkNW(&wordSearch,&coords,"M")
-		if i >= 0 && j >= 0 {fmt.Println(i,j)}
-	}
+func PartOne(wordSearch *[][]byte) {
+	var sum int
+	var xs [][]int
+	partOneWordSearch := *wordSearch
+	FindXs(&partOneWordSearch,&xs)
+
+	sum += word.FindWestWords(&partOneWordSearch,&xs)
+	sum += word.FindNorthWestWords(&partOneWordSearch,&xs)
+	sum += word.FindSouthWestWords(&partOneWordSearch,&xs)
+	sum += word.FindEastWords(&partOneWordSearch,&xs)
+	sum += word.FindNorthEastWords(&partOneWordSearch,&xs)
+	sum += word.FindSouthEastWords(&partOneWordSearch,&xs)
+	sum += word.FindNorthWords(&partOneWordSearch,&xs)
+	sum += word.FindSouthWords(&partOneWordSearch,&xs)
+	fmt.Println(sum)
 }
 
 func main() {
@@ -48,8 +58,5 @@ func main() {
 	defer fp.Close()
 	var wordSearch = make([][]byte,10)
 	CollateWordsearch(fp,&wordSearch)
-	var xs [][]int
-	FindXs(&wordSearch,&xs)
-	var ms [][]int
-	FindMs(&wordSearch,&xs,&ms)
+	PartOne(&wordSearch)
 }
