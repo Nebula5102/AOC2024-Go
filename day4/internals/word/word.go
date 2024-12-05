@@ -123,3 +123,67 @@ func FindNorthWestWords(wordSearch *[][]byte, xs *[][]int) int {
 	}
 	return sum
 }
+
+func FindEastXMAS(wordSearch *[][]byte,as *[][]int) int{
+	var sum int
+	for _, coords := range *as {
+		i,j := directions.CheckNW(&wordSearch,&coords,"M")
+		if i < 0 || j < 0 {continue}
+		i,j = directions.CheckSW(&wordSearch,&coords,"M")
+		if i < 0 || j < 0 {continue}
+		i,j = directions.CheckNE(&wordSearch,&coords,"S")
+		if i < 0 || j < 0 {continue}
+		i,j = directions.CheckSE(&wordSearch,&coords,"S")
+		if i < 0 || j < 0 {continue}
+		sum++
+	}
+	return sum
+}
+
+func FindNorthXMAS(wordSearch *[][]byte,as *[][]int) int{
+	var sum int
+	for _, coords := range *as {
+		i,j := directions.CheckSW(&wordSearch,&coords,"M")
+		if i < 0 || j < 0 {continue}
+		i,j = directions.CheckSE(&wordSearch,&coords,"M")
+		if i < 0 || j < 0 {continue}
+		i,j = directions.CheckNE(&wordSearch,&coords,"S")
+		if i < 0 || j < 0 {continue}
+		i,j = directions.CheckNW(&wordSearch,&coords,"S")
+		if i < 0 || j < 0 {continue}
+		sum++
+	}
+	return sum
+}
+
+func FindSouthXMAS(wordSearch *[][]byte,as *[][]int) int{
+	var sum int
+	for _, coords := range *as {
+		i,j := directions.CheckNW(&wordSearch,&coords,"M")
+		if i < 0 || j < 0 {continue}
+		i,j = directions.CheckNE(&wordSearch,&coords,"M")
+		if i < 0 || j < 0 {continue}
+		i,j = directions.CheckSE(&wordSearch,&coords,"S")
+		if i < 0 || j < 0 {continue}
+		i,j = directions.CheckSW(&wordSearch,&coords,"S")
+		if i < 0 || j < 0 {continue}
+		sum++
+	}
+	return sum
+}
+
+func FindWestXMAS(wordSearch *[][]byte,as *[][]int) int{
+	var sum int
+	for _, coords := range *as {
+		i,j := directions.CheckNE(&wordSearch,&coords,"M")
+		if i < 0 || j < 0 {continue}
+		i,j = directions.CheckSE(&wordSearch,&coords,"M")
+		if i < 0 || j < 0 {continue}
+		i,j = directions.CheckNW(&wordSearch,&coords,"S")
+		if i < 0 || j < 0 {continue}
+		i,j = directions.CheckSW(&wordSearch,&coords,"S")
+		if i < 0 || j < 0 {continue}
+		sum++
+	}
+	return sum
+}

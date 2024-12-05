@@ -33,6 +33,17 @@ func FindXs(wordSearch *[][]byte, xs *[][]int) {
 	}
 }
 
+func FindAs(wordSearch *[][]byte, as *[][]int) {
+	for i, row := range *wordSearch {
+		for j, letter := range row {
+			if string(letter) == "A" {
+				coords := []int{i,j}
+				*as = append(*as,coords)
+			}
+		} 
+	}
+}
+
 func PartOne(wordSearch *[][]byte) {
 	var sum int
 	var xs [][]int
@@ -47,16 +58,33 @@ func PartOne(wordSearch *[][]byte) {
 	sum += word.FindSouthEastWords(&partOneWordSearch,&xs)
 	sum += word.FindNorthWords(&partOneWordSearch,&xs)
 	sum += word.FindSouthWords(&partOneWordSearch,&xs)
+
+	fmt.Println(sum)
+}
+
+func PartTwo(wordSearch *[][]byte) {
+	var sum int
+	var as [][]int
+	partTwoWordSearch := *wordSearch
+	FindAs(&partTwoWordSearch,&as)
+
+	sum += word.FindWestXMAS(&partTwoWordSearch,&as)
+	sum += word.FindEastXMAS(&partTwoWordSearch,&as)
+	sum += word.FindNorthXMAS(&partTwoWordSearch,&as)
+	sum += word.FindSouthXMAS(&partTwoWordSearch,&as)
+
 	fmt.Println(sum)
 }
 
 func main() {
-	fp, err := os.Open("input.txt")
+	fp, err := os.Open("input2.txt")
 	if err != nil {
 		log.Fatal("Error: ",err)
 	}
 	defer fp.Close()
-	var wordSearch = make([][]byte,10)
+	var wordSearch = make([][]byte,140)
+	//var wordSearch = make([][]byte,10)
 	CollateWordsearch(fp,&wordSearch)
 	PartOne(&wordSearch)
+	PartTwo(&wordSearch)
 }
