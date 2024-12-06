@@ -67,57 +67,29 @@ func CreateRule(before int, beforepage int) rule {
 	return ruleSet
 }
 
-func SortRules(rules *[][]int) {
-	rulesHash := make([][]rule,23)
-
-	for _, set := range *rules {
-		pos := set[0]%23
-		hash := rulesHash[pos]
-		if len(hash) > 0 {
-			for _, rule := range hash {
+func CollateRules(rules **[][]int, ruleSets *[]rule) {
+	for _,set := range **rules {
+		if len(*ruleSets) < 1{
+			ruleSet := CreateRule(set[0],set[1]) 
+			*ruleSets = append(*ruleSets, ruleSet)
+		} else {
+			for index,rule := range *ruleSets {
 				if rule.value == set[0] {
 					rule.after = append(rule.after,set[1])
-				} else {
+					(*ruleSets)[index] = rule
+				} else if index == len(*ruleSets) - 1 {
 					ruleSet := CreateRule(set[0],set[1]) 
-					hash = append(hash, ruleSet)
+					*ruleSets = append(*ruleSets, ruleSet)
 				}
 			}
-		} else {
-			ruleSet := CreateRule(set[0],set[1]) 
-			hash = append(hash, ruleSet)
 		}
-		rulesHash[pos] = hash
 	}
-	/*
-	for _,set := range *rules {
-		pos := set[0]%23
-		for _,hash := range rulesHash[pos]{
-			if len(hash.after) < 1 {
+}
 
-				ruleSet := rule{
-					value: set[0],
-					after: []int{set[1]}, 
-				}
-				hash.after = append(hash.after,ruleSet)
-			} else {
-					
-				for i := 0; i < len(hash)-1; i++ {
-					if 0 < 1 {
-						hash[i].after = append(hash[i].after,set[1])
-					} else {
-						
-						ruleSet := rule{
-							value: set[0],
-							after: []int{set[1]}, 
-						}
-						hash = append(hash,ruleSet)
-					}
-				}
-			}
-		}
-	}
-	*/
-	fmt.Println(rulesHash)
+func PartOne(rules *[][]int, ordering *[][]int) {
+	var ruleSets []rule
+	CollateRules(&rules, &ruleSets)
+	fmt.Println(ruleSets)
 }
 
 func main() {
@@ -129,5 +101,5 @@ func main() {
 	var ordering [][]int
 	CollatePages(fp, &rules, &ordering)
 	fp.Close()
-	SortRules(&rules)
+	PartOne(&rules,&ordering)
 }
