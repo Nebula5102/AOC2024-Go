@@ -59,8 +59,36 @@ type rule struct {
 	after []int
 }
 
+func CreateRule(before int, beforepage int) rule {
+	 ruleSet := rule {
+		value: before,
+		after: []int{beforepage},
+	}
+	return ruleSet
+}
+
 func SortRules(rules *[][]int) {
-	rulesHash := make([][]rule,23,100)
+	rulesHash := make([][]rule,23)
+
+	for _, set := range *rules {
+		pos := set[0]%23
+		hash := rulesHash[pos]
+		if len(hash) > 0 {
+			for _, rule := range hash {
+				if rule.value == set[0] {
+					rule.after = append(rule.after,set[1])
+				} else {
+					ruleSet := CreateRule(set[0],set[1]) 
+					hash = append(hash, ruleSet)
+				}
+			}
+		} else {
+			ruleSet := CreateRule(set[0],set[1]) 
+			hash = append(hash, ruleSet)
+		}
+		rulesHash[pos] = hash
+	}
+	/*
 	for _,set := range *rules {
 		pos := set[0]%23
 		for _,hash := range rulesHash[pos]{
@@ -88,11 +116,12 @@ func SortRules(rules *[][]int) {
 			}
 		}
 	}
-	fmt.Println(ruleHash)
+	*/
+	fmt.Println(rulesHash)
 }
 
 func main() {
-	fp, err := os.Open("input.txt")
+	fp, err := os.Open("input2.txt")
 	if err != nil {
 		log.Fatal("Error: ",err)
 	}
