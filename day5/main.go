@@ -86,9 +86,17 @@ func CollateRules(rules **[][]int, ruleSets *[]rule) {
 	}
 }
 
+func OrderCorrect(rules *[]rule, order *[]int) {
+	var validRs []rule
+	for _, val := range order
+}
+
 func PartOne(rules *[][]int, ordering *[][]int) {
 	var ruleSets []rule
 	CollateRules(&rules, &ruleSets)
+	for _, order := range *ordering{
+		OrderCorrect(&ruleSets,&order)
+	}
 	fmt.Println(ruleSets)
 }
 
