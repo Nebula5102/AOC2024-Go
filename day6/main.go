@@ -133,27 +133,56 @@ func PartOne(lab *[][]byte) {
 	fmt.Println(sum)
 }
 
+	/*
+func CheckLoop(lab *[][]byte, coords *[]int) {
+	
+}
+	*/
+
+func PartTwo(lab *[][]byte, start *[]int) {
+	var positions [][]int 
+	for i , row := range *lab {
+		for j , val := range row {
+			if string(val) == "X" && (i != (*start)[0] && j != (*start)[1]) {
+				(*lab)[i][j] = '.'
+				positions = append(positions, []int{i,j})
+			}
+		}
+	}
+	/*
+	for _, coords := range {
+		CheckLoop(lab,&coords)
+	}
+	*/
+}
+
+func Traverse(lab *[][]byte, position []int) {
+	leaving := 0
+	for leaving >= 0 {
+		facing := string((*lab)[position[0]][position[1]])
+		if facing == "^" {
+			leaving = GoNorth(lab,&position)
+		} else if facing == ">" {
+			leaving = GoEast(lab,&position)
+		} else if facing == "v" {
+			leaving = GoSouth(lab,&position)
+		} else if facing == "<" {
+			leaving = GoWest(lab,&position)
+		}
+	}
+}
+
 func main() {
 	var lab [][]byte
-	fp, err := os.Open("input2.txt")
+	fp, err := os.Open("input.txt")
 	if err != nil {
 		log.Fatal("Error:", err)
 	}
 	CreateMap(fp,&lab)
 	fp.Close()
 	position := FindStart(&lab)
-	leaving := 0
-	for leaving >= 0 {
-		facing := string(lab[position[0]][position[1]])
-		if facing == "^" {
-			leaving = GoNorth(&lab,&position)
-		} else if facing == ">" {
-			leaving = GoEast(&lab,&position)
-		} else if facing == "v" {
-			leaving = GoSouth(&lab,&position)
-		} else if facing == "<" {
-			leaving = GoWest(&lab,&position)
-		}
-	}
+	startPrtTwo := FindStart(&lab)
+	Traverse(&lab,position)
 	PartOne(&lab)
+	PartTwo(&lab, &startPrtTwo)
 }
