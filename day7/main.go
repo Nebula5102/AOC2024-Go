@@ -80,24 +80,27 @@ DBCA
 DCAB
 DCBA
 */
-func Permutations(combination []byte) (string, string) {
+func Permutations(combination []byte) []string {
+	var list []string
 	if len(combination) < 3 {
-		return string(combination), string(combination[1])+string(combination[0])
+		list = append(list, string(combination))
+		list = append(list, string(combination[1])+string(combination[0]))
+		fmt.Println(list)
+		return list
 	} else {
-		var forward, reverse string
-		for i := 0; i< len(combination); i++ {
+		for i := 0; i<len(combination); i++ {
 			temp := combination[0]
-			combination[0] = combination[i]
 			combination[i] = temp
-			forward, reverse = Permutations(combination[1:])
-			forward = string(combination[0])+forward
-			reverse = string(combination[0])+reverse
-			fmt.Println(forward,reverse)
-		} 
-		return forward, reverse
+			list = Permutations(combination[1:])
+			for index, combo := range list {
+				list[index] = combo + list[index]
+				fmt.Println(list)
+			} 
+		}
 	}
-	return "", ""
+	return list
 }
+
 
 func main() {
 	fp, err := os.Open("input.txt")
@@ -109,5 +112,5 @@ func main() {
 	fp.Close()
 	fmt.Println(results,expressions)
 	combo := []byte{'A','B','C','D'}
-	Permutations(combo)
+	fmt.Println(Permutations(combo))
 }
