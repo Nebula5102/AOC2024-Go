@@ -44,6 +44,61 @@ func GetExpressionVariables(fp *os.File,expressions *[][]int) ([]int) {
 	return results
 }
 
+/*
+AB
+BA
+
+ABC
+ACB
+BAC
+BCA
+CAB
+CBA
+
+ABCD
+ACBD
+ADBC
+ABDC
+ACDB
+ADCB
+BACD
+BCAD
+BCDA
+BDCA
+BDAC
+BADC
+CBAD
+CABD
+CBDA
+CDBA
+CADB
+CDAB
+DABC
+DACB
+DBAC
+DBCA
+DCAB
+DCBA
+*/
+func Permutations(combination []byte) (string, string) {
+	if len(combination) < 3 {
+		return string(combination), string(combination[1])+string(combination[0])
+	} else {
+		var forward, reverse string
+		for i := 0; i< len(combination); i++ {
+			temp := combination[0]
+			combination[0] = combination[i]
+			combination[i] = temp
+			forward, reverse = Permutations(combination[1:])
+			forward = string(combination[0])+forward
+			reverse = string(combination[0])+reverse
+			fmt.Println(forward,reverse)
+		} 
+		return forward, reverse
+	}
+	return "", ""
+}
+
 func main() {
 	fp, err := os.Open("input.txt")
 	if err != nil {
@@ -53,4 +108,6 @@ func main() {
 	results := GetExpressionVariables(fp, &expressions)
 	fp.Close()
 	fmt.Println(results,expressions)
+	combo := []byte{'A','B','C','D'}
+	Permutations(combo)
 }
