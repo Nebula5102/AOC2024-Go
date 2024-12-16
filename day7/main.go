@@ -80,22 +80,22 @@ DBCA
 DCAB
 DCBA
 */
-func Permutations(combination []byte) []string {
-	var list []string
+func Permutations(combination []byte, list []string) []string {
+	var starting []byte
 	if len(combination) < 3 {
 		list = append(list, string(combination))
 		list = append(list, string(combination[1])+string(combination[0]))
-		fmt.Println(list)
 		return list
 	} else {
 		for i := 0; i<len(combination); i++ {
 			temp := combination[0]
+			combination[0] = combination[i]
 			combination[i] = temp
-			list = Permutations(combination[1:])
-			for index, combo := range list {
-				list[index] = combo + list[index]
-				fmt.Println(list)
-			} 
+			starting = append(starting,combination[0])
+			list = Permutations(combination[1:], list)
+			for j := i*2; j < (i*2)+2; j++ {
+				list[j] = string(combination[0])+list[j]
+			}
 		}
 	}
 	return list
@@ -111,6 +111,10 @@ func main() {
 	results := GetExpressionVariables(fp, &expressions)
 	fp.Close()
 	fmt.Println(results,expressions)
-	combo := []byte{'A','B','C','D'}
-	fmt.Println(Permutations(combo))
+	combo := []byte{'A','B','C'}
+	var list []string
+	fmt.Println(Permutations(combo, list))
+	combo = []byte{'A','B','C','D'}
+	var lis []string
+	fmt.Println(Permutations(combo, lis))
 }
