@@ -70,7 +70,7 @@ func Permutations(combination []byte) []string {
 
 func GetCombos(expression []int) [][]byte {
 	var combos [][]byte
-	multiply := bytes.Repeat([]byte{'*'},len(expression)-1)
+	multiply := bytes.Repeat([]byte{'*'},len(expression)-2)
 	for i := 0; i < len(multiply)+1; i++ {
 		var temp = make([]byte,len(multiply))
 		copy(temp,multiply)
@@ -82,16 +82,55 @@ func GetCombos(expression []int) [][]byte {
 	return combos
 }
 
+func Operation(operator byte, res int, v int) int {
+	var result int
+	if operator == '*' {
+		result = res*v
+	} else if operator == '+' {
+		result = res+v
+	}
+	return result
+}
+
 func PartOne(results []int, expressions [][]int) {
+	var ec [][]string
+	var correct []int
 	for _,expression := range expressions {
-		combos := GetCombos(expression)
 		var permutations []string
+		combos := GetCombos(expression)
 		permutations = append(permutations,string(combos[0]))
 		for _,combo := range combos[1:len(combos)-1] {
 			permutations = append(permutations,Permutations(combo)...)
 		}
 		permutations = append(permutations,string(combos[len(combos)-1]))
+		ec = append(ec,permutations)
 	}
+	for _,expression := range expressions {
+		combos := ec[expression[0]]
+		for _,combo :=range combos {
+			res := expression[1]
+			for i := 0; i < len(combo); i++ {
+				res = Operation(combo[i],res,expression[i+2])
+			}
+			if res == results[expression[0]] {
+				if 1 > len(correct) {
+					correct = append(correct,expression[0])
+				}
+				for ind,i := range correct {
+					if i == expression[0] {
+						break
+					} else if ind == len(correct)-1 {
+						correct = append(correct,expression[0])
+					} 
+				}
+			}
+		}
+	}
+	var sum int
+	for _,i := range correct {
+		sum += results[i]
+	}
+	fmt.Println(sum)
 }
 
 func main() {
